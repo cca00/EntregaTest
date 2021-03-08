@@ -1,5 +1,6 @@
 import { pipe } from 'rxjs';
 import { FilterimagesPipe } from './filterimages.pipe';
+import { ImageDetailComponent } from './image-details/image-details.component';
 import { ImageService } from  './image.service';
 
 
@@ -37,5 +38,10 @@ describe('Filtrado de Imagenes', () => {
   it('Si da clic en "All" debe filtrar todas las imagenes',()=>{
     const pipe = new FilterimagesPipe();
     expect(pipe.transform(Imagesdelatils, 'all')).toEqual(Imagesdelatils);
+  });
+  it('Si da clic en "None" no debe filtar imagenes y ser vacío',()=>{
+    const pipe = new FilterimagesPipe();
+    const list = [];
+    expect(pipe.transform(Imagesdelatils, 'none')).toEqual(list);
   });
 });
