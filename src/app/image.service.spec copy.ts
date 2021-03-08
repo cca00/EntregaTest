@@ -30,5 +30,11 @@ describe('ImageService', () => {
       let imagene = service.getImage(100);
       expect(imagene).toEqual(undefined);
     });
+
+    it('Retorna indefinido cuando envio un id "X" que no se encuentre en la lista', () =>{
+      const id = 99;
+      let res = service.getImage(id);
+      expect(res).toBeUndefined();
+    });
   });
 });
