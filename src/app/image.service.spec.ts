@@ -48,6 +48,9 @@ describe('ImageService', () => {
         { id: 4, brand: "gato", url: "assets/images/gato2.jpeg" },
         { id: 5, brand: "perro", url: "assets/images/perro3.jpg" }])
     });
+    it('Debe verificar si la función getImages fue definido', () =>{
+      expect(mock.getImages).toBeDefined();
+    });
   });
 
   describe('getImage', () => {
@@ -58,8 +61,8 @@ describe('ImageService', () => {
     });
 
 
-    it('debe retornar indefinido si se busca una imagen con id que NO existe', () => {
-      let imagene = service.getImage(100);
+    it('debe retornar indefinido si se busca una imagen con id menor que 0', () => {
+      let imagene = service.getImage(-2);
       expect(imagene).toEqual(undefined);
     });
 
@@ -73,9 +76,6 @@ describe('ImageService', () => {
     });
     it('Debe verificar si la función getImage fue definido', () =>{
       expect(mock.getImage).toBeDefined();
-    });
-    it('Debe verificar si la función getImages fue definido', () =>{
-      expect(mock.getImages).toBeDefined();
     });
   });
 });

@@ -28,7 +28,7 @@ describe('Filtrado de Imagenes', () => {
     { "id": 5, "brand": "perro", "url": "assets/images/perro3.jpg" }];
     expect(pipe.transform(Imagesdelatils, 'perro')).toEqual(imagesPerros);
   });
-  it('Si da clic en "Perro" debe filtrar todos los gatos',()=>{
+  it('Si da clic en "Gato" debe filtrar todos los gatos',()=>{
     const pipe = new FilterimagesPipe();
     const imagesGatos = [
     { "id": 3, "brand": "gato", "url": "assets/images/gato1.jpg" },
