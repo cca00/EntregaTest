@@ -24,6 +24,7 @@ import { ImageService } from './image.service';
     //NgbModule
   ],
   providers: [ImageService, FilterimagesPipe, ImageService],
+  exports: [FilterimagesPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
