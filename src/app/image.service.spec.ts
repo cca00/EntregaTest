@@ -29,7 +29,7 @@ describe('ImageService', () => {
       ]
     }).compileComponents();
   }));
-
+  
   beforeEach(() => {
     spy = spyOn(mock, 'getImage').and.returnValue(null);
     service = new ImageService();
