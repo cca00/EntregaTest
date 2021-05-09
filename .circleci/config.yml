@@ -1,0 +1,86 @@
+version: 2.1
+orbs:
+  node: circleci/node@4.1.0
+  browser-tools: circleci/browser-tools@1.0.1
+  sonarcloud: extendaretail/sonarcloud@0.0.2
+  aws-cli: circleci/aws-cli@1.0.0
+
+jobs:
+  unit_test:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
+      - run:
+          name: Unit test
+          command: npm run test-ci
+      - persist_to_workspace:
+          root: ~/project
+          paths: . 
+  static_code_scan:
+    executor: node/default
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Static code Analysis
+          command: |
+            npm i -D sonarqube-scanner
+            ./node_modules/sonarqube-scanner/dist/bin/sonar-scanner -Dsonar.login=$SONAR_AUTH_TOKEN
+      - sonarcloud/check_quality_gate
+  build:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Build app
+          command: npm run build
+      - persist_to_workspace:
+          root: ~/project/dist
+          paths: pet-book
+  zip:
+    machine: true
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Zipping artifact to deploy
+          command: docker run -v /home/circleci/project/pet-book:/to_zip -w /to_zip kramos/alpine-zip -r pet-book.zip /to_zip
+      - store_artifacts:
+          path: /home/circleci/app/pet-book/pet-book.zip
+      - persist_to_workspace:
+          root: ~/project
+          paths: .
+  
+  deploy:
+    executor: aws-cli/default
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - aws-cli/install
+      - aws-cli/setup
+      - run:
+          name: Deploy artifact to AWS
+          command: aws s3 cp pet-book/pet-book.zip s3://pet-book-deploy-circleci
+
+workflows:
+  default:
+    jobs:
+      - unit_test
+      - static_code_scan:
+          context: sonarCloud
+          requires:
+            - unit_test
+      - build:
+          requires:
+            - static_code_scan
+      - zip:
+          requires:
+            - build
+      - deploy:
+          context: Amazon S3
+          requires:
+            - zip
