@@ -23,7 +23,7 @@ import { ImageService } from './image.service';
     AppRoutingModule,
     //NgbModule
   ],
-  providers: [ImageService, FilterimagesPipe],
+  providers: [ImageService, FilterimagesPipe, ImageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

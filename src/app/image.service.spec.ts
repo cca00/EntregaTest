@@ -35,20 +35,34 @@ describe('ImageService', () => {
     service = new ImageService();
   });
   describe('getImages', () => {
-    it('debe retornar todas las imagenes', () => {
+    it('debe retornar el numero total de todas las imagenes', () => {
       let imagenes = service.getImages();
       expect(imagenes.length).toEqual(5);
+    });
+    it('debe retornar el detalle de todas las imagenes', () => {
+      let imagenes = service.getImages();
+      expect(service.getImages()).toEqual([
+        { id: 1, brand: "perro", url: "assets/images/perro1.jpg" },    
+        { id: 2, brand: "perro", url: "assets/images/perro2.jpg" },
+        { id: 3, brand: "gato", url: "assets/images/gato1.jpg" },
+        { id: 4, brand: "gato", url: "assets/images/gato2.jpeg" },
+        { id: 5, brand: "perro", url: "assets/images/perro3.jpg" }])
+    });
+    it('Debe verificar si la función getImages fue definido', () =>{
+      expect(mock.getImages).toBeDefined();
     });
   });
 
   describe('getImage', () => {
-    it('debe retornar la imagen con id si existe', () => {
-      let imagene = service.getImage(2);
-      expect(imagene.brand).toEqual('perro');
+    it('debe retornar los datos según el id que corresponde', () => {
+      let imagene = service.getImage(4);
+      expect(imagene.brand).toBe('gato');
+      expect(imagene.url).toBe("assets/images/gato2.jpeg");
     });
 
-    it('debe retornar indefinido si se busca una imagen con id que NO existe', () => {
-      let imagene = service.getImage(100);
+
+    it('debe retornar indefinido si se busca una imagen con id menor que 0', () => {
+      let imagene = service.getImage(-2);
       expect(imagene).toEqual(undefined);
     });
 
@@ -57,19 +71,11 @@ describe('ImageService', () => {
       let res = service.getImage(id);
       expect(res).toBeUndefined();
     });
-    describe('getImage2', () => {
-      it('Debe verificar si la función getImage fue llamada "X" veces', () =>{
-        expect(mock.getImage).toHaveBeenCalledTimes(0);
-      });
-      it('Debe verificar si la función getImage fue definido', () =>{
-        expect(mock.getImage).toBeDefined();
-      });
-      it('Debe verificar si la función getImages fue definido', () =>{
-        expect(mock.getImages).toBeDefined();
-      });
+    it('Debe verificar si la función getImage fue llamada "X" veces', () =>{
+      expect(mock.getImage).toHaveBeenCalledTimes(0);
+    });
+    it('Debe verificar si la función getImage fue definido', () =>{
+      expect(mock.getImage).toBeDefined();
     });
   });
 });
-  /**it('should be created', () => {
-    expect(service).toBeTruthy();
-  });**/
